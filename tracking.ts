@@ -49,8 +49,9 @@ export const initDataLayer = (): void => {
 };
 
 export const initGtm = (): void => {
-  const gtmId = import.meta.env.VITE_GTM_ID;
+  const gtmId = (import.meta.env.VITE_GTM_ID || '').trim();
   if (!gtmId) return;
+  initDataLayer();
 
   const existing = document.querySelector(`script[data-gtm-id="${gtmId}"]`);
   if (existing) return;
@@ -83,7 +84,7 @@ export const trackEvent = (name: TrackingEventName, payload: TrackingPayload = {
 export const sanitizePhone = (value: string): string => value.replace(/\D/g, '');
 
 export const buildWhatsAppUrl = (message: string): string => {
-  const envNumber = sanitizePhone(import.meta.env.VITE_WHATSAPP_NUMBER || '');
+  const envNumber = sanitizePhone((import.meta.env.VITE_WHATSAPP_NUMBER || '').trim());
   const fallbackNumber = sanitizePhone(DEFAULT_WHATSAPP_NUMBER);
   const number = envNumber || fallbackNumber;
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
