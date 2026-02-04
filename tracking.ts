@@ -8,6 +8,7 @@ declare global {
 
 const PAGE_NAME = 'prime_motors_x12_landing';
 const UTM_KEY = 'prime_motors_x12_utm';
+const DEFAULT_WHATSAPP_NUMBER = '5547999862050';
 
 interface UTMContext {
   utm_source?: string;
@@ -82,9 +83,8 @@ export const trackEvent = (name: TrackingEventName, payload: TrackingPayload = {
 export const sanitizePhone = (value: string): string => value.replace(/\D/g, '');
 
 export const buildWhatsAppUrl = (message: string): string => {
-  const number = sanitizePhone(import.meta.env.VITE_WHATSAPP_NUMBER || '');
-  if (!number) {
-    return '#';
-  }
+  const envNumber = sanitizePhone(import.meta.env.VITE_WHATSAPP_NUMBER || '');
+  const fallbackNumber = sanitizePhone(DEFAULT_WHATSAPP_NUMBER);
+  const number = envNumber || fallbackNumber;
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 };
